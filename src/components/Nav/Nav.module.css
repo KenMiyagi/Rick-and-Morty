@@ -1,0 +1,10 @@
+.navContainer{
+    margin-right:0;
+    margin-bottom: 30px;
+    background-color: rgba(53, 77, 100, 0.445);
+}
+
+.buttonsContainer{
+    flex-direction: row;
+
+}

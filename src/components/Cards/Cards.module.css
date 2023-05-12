@@ -1,0 +1,8 @@
+.cardsCointainer{
+    display: inline-block;
+    flex-direction: row;
+}
+
+.footer{
+    padding: 1px
+}
