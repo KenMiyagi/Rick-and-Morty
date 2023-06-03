@@ -25,9 +25,8 @@
 }
 
 .img{
-    margin-top: 10px;
-    margin-right: 10px;
     border-radius: 45px;
+    border: 12px groove rgb(99, 8, 160);
 }
 
 .btn{

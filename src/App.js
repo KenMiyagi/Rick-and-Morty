@@ -12,19 +12,22 @@ import axios from "axios"
 function App() {
    let [characters, setCharacters] = useState([]);
    
-   function onSearch(id) {
-      axios(`https://rickandmortyapi.com/api/character/${id}`).then(({ data }) => {
-        if (data.name) {
-          // Verificar si el personaje ya está en la lista
-          if (!characters.some((char) => char.id === data.id)) {
-            setCharacters((oldChars) => [...oldChars, data]);
+   const onSearch = async (id)=> {
+      try {
+         const {data} = await axios(`http://localhost:3002/rickandmorty/character/${id}`);
+         if (data.name) {
+            // Verificar si el personaje ya está en la lista
+            if (!characters.some((char) => char.id === data.id)) {
+              setCharacters((oldChars) => [...oldChars, data]);
+            } else {
+              window.alert('¡Este personaje ya está en la lista!');
+            }
           } else {
-            window.alert('¡Este personaje ya está en la lista!');
+            window.alert('¡No hay personajes con este ID!');
           }
-        } else {
-          window.alert('¡No hay personajes con este ID!');
-        }
-      });
+      } catch (error) {
+         throw Error(error)
+      }
     }
    const onClose = (id)=>{
       const characterFiltered = characters.filter(char => char.id !== Number(id))
@@ -36,10 +39,17 @@ function App() {
    const PASSWORD = "q1w2e3r4"
    const navigate = useNavigate()
 
-   function login(userData){
-      if(EMAIL===userData.email && PASSWORD===userData.password){
-         setAccess(true)
-         navigate("home")
+   const login = async (userData) =>  {
+      const { email, password } = userData;
+      const URL = 'http://localhost:3002/rickandmorty/login/';
+      
+      try {
+         const {data} = await axios(URL + `?email=${email}&password=${password}`)
+         const { access } = data;
+         setAccess(access);
+         access && navigate('/home');
+      } catch (error) {
+         throw Error(error)
       }
    }
 
@@ -54,7 +64,7 @@ function App() {
             <Routes>
                   <Route path="/" element={<Form login={login}/>}/>
                   <Route path="/about" element={<About/>}/>
-                  <Route path="home" element={<Cards characters={characters} onClose={onClose}/>}/>
+                  <Route path="/home" element={<Cards characters={characters} onClose={onClose}/>}/>
                   <Route path="/detail/:id" element={<Detail/>}/>
                   <Route path="/favorites" element={<Favorites/>}/>
             </Routes>
@@ -64,16 +74,3 @@ function App() {
 
 export default App;
 
-
-/*    const example = {
-      id: 1,
-      name: 'Rick Sanchez',
-      status: 'Alive',
-      species: 'Human',
-      gender: 'Male',
-      origin: {
-         name: 'Earth (C-137)',
-         url: 'https://rickandmortyapi.com/api/location/1',
-      },
-      image: 'https://rickandmortyapi.com/api/character/avatar/1.jpeg',
-}; */

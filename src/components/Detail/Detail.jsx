@@ -1,6 +1,6 @@
 import axios from "axios"
 import style from "./Detail.module.css"
-import {useParams} from "react-router-dom"
+import {useParams, useNavigate} from "react-router-dom"
 import { useState, useEffect} from "react";
 import { NavLink } from "react-router-dom";
 export default function Detail(){
@@ -10,7 +10,7 @@ export default function Detail(){
     const [character,setCharacter] = useState([]);
 
     useEffect(() => {
-        axios(`https://rickandmortyapi.com/api/character/${id}`).then(({ data }) => {
+        axios(`http://localhost:3002/rickandmorty/character/${id}`).then(({ data }) => {
            if (data.name) {
               setCharacter(data);
            } else {
@@ -20,11 +20,18 @@ export default function Detail(){
         return setCharacter({});
      }, [id]);
 
+
+        const navigate = useNavigate();
+      
+        const goBack = () => {
+          navigate(-1);
+        };
+    
     return(
         <div>
             <div className={style.detailsContainer}>
                 <div className={style.spec} >
-                    <NavLink to="/favorites"><button className={style.btn} >↩</button></NavLink> 
+                    <button className={style.btn} onClick={goBack}>↩</button>
                     <h2>Nombre: {character?.name}</h2>
                     <h2>Status: {character?.status}</h2>
                     <h2>Species: {character?.species}</h2>
